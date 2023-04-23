@@ -12,7 +12,7 @@ root.title("Invoice Generator")
 # Set the window size
 root.geometry("1540x780+0+0")
 root.resizable(False,False)
-root['background']='white'
+root['background']='gray'
 
 def entrydata():
     if invoice_entry.get()=='' or gst_entry.get()=='':
@@ -23,22 +23,45 @@ def entrydata():
         query='insert into entrydata(invoice_number, company_name, gst_number, date, product_name, quantity, gstrate, price) values(%s, %s, %s, %s, %s, %s, %s, %s)'
         mycursor.execute(query, (invoice_entry.get(),customer_entry.get(),gst_entry.get(),date_entry.get(),product_Entry.get(),quantity_entry.get(),GSTRate_entry.get(),price_entry.get()))
         
-
-        con.commit()
-        fetchdata()
-        con.close()
-    
-def fetchdata():
-    con=myconn.connect(host='localhost',user='root',password='tejas02_',database="Entries")
-    mycursor=con.cursor()
-    mycursor.execute("select * from entrydata")
-    rows=mycursor.fetchall()
-    if len(rows)!=0:
-        Entries_Table.delete(*Entries_Table.get_children())
+        mycursor.execute("select * from entrydata")
+        rows=mycursor.fetchall()
+        if len(rows)!=0:
+            Entries_Table.delete(*Entries_Table.get_children())
         for i in rows:
             Entries_Table.insert("",END,values=i)
-            con.commit()
-            con.close()
+            
+
+        con.commit()
+        # fetchdata()
+        con.close()
+
+       
+
+# def Add_Tree():
+    # invoiceno = int(invoice_entry.get())
+    # companyname = customer_entry.get()
+    # gstno = gst_entry.get()
+    # productname = product_Entry
+    # quantity = quantity_entry
+    # date = date_entry
+    # gstrate = GSTRate_entry
+    # price = price_entry
+    # invoice_item = [invoiceno, companyname, gstno, productname, quantity, date, gstrate, price]
+
+    # Entries_Table.insert('',0, values=invoice_item)
+
+    
+# def fetchdata():
+#     con=myconn.connect(host='localhost',user='root',password='tejas02_',database="Entries")
+#     mycursor=con.cursor()
+#     mycursor.execute("select * from entrydata")
+#     rows=mycursor.fetchall()
+#     if len(rows)!=0:
+#         Entries_Table.delete(*Entries_Table.get_children())
+#         for i in rows:
+#             Entries_Table.insert("",END,values=i)
+#             con.commit()
+#             con.close()
 
 
 # Create labels and entry boxes for the invoice information
@@ -194,7 +217,9 @@ Entries_Table.heading("Price",text="Price")
 
 Entries_Table["show"]="headings"
 Entries_Table.place(x=0,y=480)
-fetchdata()
+# fetchdata()
+entrydata()
+
 
 
 # Run the main loop
